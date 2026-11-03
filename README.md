@@ -1,6 +1,6 @@
 # VNEWS 24H - BÁO ĐIỆN TỬ TRI THỨC & CÔNG NGHỆ SỐ
 
-Trang web báo tin tức điện tử hiện đại, tối ưu SEO, hỗ trợ đa phương tiện, giao diện chuẩn báo chí cao cấp (Editorial Design), tích hợp đầy đủ hệ thống **xử lý RSS đa nguồn, bóc tách XML thời gian thực, tự động crawl bài viết toàn văn** và đọc báo bằng giọng nói AI.
+Trang web báo tin tức điện tử hiện đại, tối ưu SEO, hỗ trợ đa phương tiện, giao diện chuẩn báo chí cao cấp (Editorial Design), tích hợp đầy đủ hệ thống **xử lý RSS đa nguồn, bóc tách XML thời gian thực, tự động crawl bài viết toàn văn, phân trang động và đọc báo bằng giọng nói AI**.
 
 ---
 
@@ -14,10 +14,10 @@ Trang web báo tin tức điện tử hiện đại, tối ưu SEO, hỗ trợ �
   * **Dân Trí** (Trang chủ, Xã hội, Kinh doanh, Sức mạnh số, Thể thao, Giải trí, Đời sống).
 * **Bộ Phân Tích XML (Balanced Tag & CDATA Parser):**
   * Tự động bóc tách Title, Link, Description, Sapo, Enclosure image, PubDate.
-  * Lọc ảnh chất lượng cao và làm sạch mã HTML thừa.
+  * Tối ưu ảnh chất lượng cao qua mạng phân phối CDN quốc tế (Unsplash CDN), giải phóng hoàn toàn dung lượng tệp tin cục bộ.
 * **Bộ Đệm Dữ Liệu Bộ Nhớ (In-Memory Cache với TTL):**
   * Cache luồng tin RSS 5 phút giúp website phản hồi siêu tốc (< 15ms) và không bị nguồn báo chặn IP.
-  * Cache bài viết chi tiết crawl được 30 phút.
+  * Tự động thu gom và giải phóng các mục hết hạn (Garbage Collection định kỳ 10 phút).
 * **Chuyển Đổi Nguồn & Chuyên Mục Linh Hoạt:**
   * Dropdown chọn nguồn báo ngay tại Top Bar và thanh điều hướng danh mục không cần reload trang.
   * Nút làm mới tức thì (`Refresh`) kèm hiệu ứng xoay icon.
@@ -30,25 +30,27 @@ Trang web báo tin tức điện tử hiện đại, tối ưu SEO, hỗ trợ �
   * Loại bỏ hoàn toàn mã độc, script, quảng cáo, tracking và banner phiền toái.
   * Hiển thị bài viết sạch đẹp trong **Reader Modal** và cung cấp nút mở bài gốc tại tòa soạn.
 
-### 3. Đổ Dữ Liệu RSS Lên Toàn Bộ Giao Diện (Data Binding)
+### 3. Đổ Dữ Liệu RSS Lên Toàn Bộ Giao Diện & Tính Năng Nâng Cao
 * **Breaking News Ticker:** Tự động lấy 8 tin nóng nhất từ luồng RSS đang chọn để chạy dòng chữ khẩn cấp.
 * **Bố cục Hero 3 Cột Tiêu Điểm:**
   * *Tâm điểm (Super Hero):* Bài viết đầu bảng với ảnh lớn, tiêu đề sang trọng, sapo và nhãn nguồn tin.
   * *Cột trái (Sub-Heroes):* 2 bài tiêu điểm kế tiếp với nhãn màu chuyên mục.
   * *Cột phải (Dòng sự kiện 24/7):* 6 bài viết mới nhất cập nhật theo mốc thời gian giờ:phút.
-* **Lưới Bài Viết Chuyên Mục (Magazine Grid):** Hiển thị danh sách các bài viết tiếp theo dạng thẻ bài báo cao cấp kèm nút Bookmark đọc sau.
-* **Sidebar Top Đọc Nhiều:** Top 5 bài viết nổi bật được xếp thứ tự trực quan.
+* **Lưới Bài Viết Chuyên Mục & Nút Xem Thêm (Load More):**
+  * Hỗ trợ nút **"Xem Thêm Tin Tức"** kèm số lượng tin bài còn lại trong luồng RSS.
+  * Bấm để tải thêm mượt mà từng đợt 6 bài báo mà không cần tải lại trang.
+* **Bộ Lọc Tag Nhanh (Sub-Tags Filter):** Lọc theo các chủ đề nóng: *Tất cả*, *Kinh doanh*, *Công nghệ & AI*, *Thể thao*.
+* **Thanh Tiến Trình Đọc Bài (Reading Progress Bar):** Thanh tiến trình gradient chạy dọc đầu cửa sổ khi cuộn xem bài viết trong Reader Modal.
 * **Skeleton Loading Shimmer:** Hiệu ứng khung xám ánh sáng lượn sóng trong lúc đang tải dữ liệu RSS.
 
 ### 4. Tiện Ích Độc Giả & Đọc Báo Bằng Giọng Nói AI
 * **AI Text-To-Speech (Báo Nói Thông Minh):**
-  * Nghe đọc to toàn bộ nội dung bài viết vừa crawl được bằng giọng tiếng Việt chuẩn.
+  * Nghe đọc to toàn bộ nội dung bài viết vừa crawl được bằng giọng tiếng Việt chuẩn qua Web Speech API.
   * Thanh nghe tin nhanh 60s tích hợp visualizer sóng âm động (CSS Sound Wave).
-* **Quản Lý Bài Viết Đọc Sau (Bookmarks Drawer):** Lưu bài viết vào `localStorage`, xem lại và xóa bất cứ lúc nào.
+* **Quản Lý Bài Viết Đọc Sau (Bookmarks Offline):** Lưu bài viết kèm **toàn bộ nội dung đã crawl** vào `localStorage` để có thể mở đọc trọn vẹn ngay cả khi mất mạng.
 * **Chế Độ Sáng / Tối (Dark & Light Theme):** Chuyển đổi giao diện tức thì với màu sắc êm dịu cho mắt khi đọc đêm.
 * **Tùy Chỉnh Cỡ Chữ (A+ / A-):** Tăng giảm kích thước chữ trong cửa sổ đọc bài.
 * **Tìm Kiếm Nhanh (Live Search Filter):** Nhập từ khóa và nhấn Enter để tìm kiếm tức thì trên danh sách tin tức.
-* **Thăm Dò Ý Kiến Độc Giả (Interactive Poll):** Biểu quyết trực tiếp và cập nhật thanh phần trăm tức thì.
 
 ---
 
@@ -82,18 +84,11 @@ Trang web báo tin tức điện tử hiện đại, tối ưu SEO, hỗ trợ �
 
 ```
 Web_bao_tin_tuc/
-├── index.html            # Khung sườn HTML5 chuẩn SEO & Semantic (Containers động)
-├── server.js             # Máy chủ Node.js (RSS Proxy, XML Parser, In-Memory Cache & Web Crawler)
+├── index.html            # Khung sườn HTML5 chuẩn SEO (Containers động, Skeleton Shimmer, Progress Bar)
+├── server.js             # Máy chủ Node.js (RSS Ingestion, XML Parser, TTL Cache, Web Crawler)
 ├── css/
-   └── style.css         # Hệ thống thiết kế (Tokens, Dark/Light, Layout, Skeletons, Animations)
+   └── style.css         # Hệ thống thiết kế (Tokens, Dark/Light, Layout, Animations, Load More)
 ├── js/
-   ├── data.js           # Cơ sở dữ liệu dự phòng (Offline fallback)
-   └── app.js            # Core App (RSS Data Binding, Crawler Loader, Theme, Bookmark, Audio, Modal)
-└── assets/
-    └── images/           # Ảnh báo chí chuẩn phân giải cao
-        ├── hero.jpg
-        ├── business.jpg
-        ├── green_tech.jpg
-        ├── sports.jpg
-        └── lifestyle.jpg
+   ├── data.js           # Dữ liệu dự phòng siêu nhẹ (Offline fallback)
+   └── app.js            # Core App (State Management, Data Binding, Crawler, Bookmarks, Audio, Search)
 ```

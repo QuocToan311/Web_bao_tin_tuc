@@ -14,7 +14,7 @@
   <meta property="og:url" content="https://vnews24h.vn/">
   <meta property="og:title" content="VNEWS 24H - Tin tức Đa chiều, Chính xác và Kịp thời">
   <meta property="og:description" content="Trải nghiệm đọc báo chuẩn mực với tin tức dòng sự kiện, đọc báo bằng giọng nói AI và các chuyên đề phóng sự đặc sắc.">
-  <meta property="og:image" content="assets/images/hero.jpg">
+  <meta property="og:image" content="https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=1200&auto=format&fit=crop&q=80">
   <!-- Icons & Fonts -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="stylesheet" href="css/style.css">
@@ -267,16 +267,21 @@
         <div class="section-wrapper" style="margin-top: 0;">
           <div class="section-head">
             <h2 class="section-title" id="category-section-title"><i class="fa-solid fa-bolt" style="color: var(--accent-blue);"></i> Tin Tức Mới Nhất</h2>
-            <div class="section-tags">
-              <button class="sub-tag-btn active">Tất cả</button>
-              <button class="sub-tag-btn">Tài chính</button>
-              <button class="sub-tag-btn">Bất động sản</button>
-              <button class="sub-tag-btn">Khởi nghiệp</button>
+            <div class="section-tags" id="category-sub-tags">
+              <button class="sub-tag-btn active" data-filter="all">Tất cả</button>
+              <button class="sub-tag-btn" data-filter="kinhdoanh">Kinh doanh</button>
+              <button class="sub-tag-btn" data-filter="congnghe">Công nghệ & AI</button>
+              <button class="sub-tag-btn" data-filter="thethao">Thể thao</button>
             </div>
           </div>
 
           <div class="news-cards-grid" id="main-news-grid">
-            <div class="news-card"><div class="skeleton skeleton-img"></div><div class="skeleton skeleton-title"></div><div class="skeleton skeleton-text"></div></div>
+            <div class="news-card"><div class="skeleton skeleton-img"></div>
+          <div class="load-more-wrapper">
+            <button id="btn-load-more" class="btn-load-more">
+              <i class="fa-solid fa-angles-down"></i> Xem Thêm Tin Tức
+            </button>
+          </div><div class="skeleton skeleton-title"></div><div class="skeleton skeleton-text"></div></div>
             <div class="news-card"><div class="skeleton skeleton-img"></div><div class="skeleton skeleton-title"></div><div class="skeleton skeleton-text"></div></div>
             <div class="news-card"><div class="skeleton skeleton-img"></div><div class="skeleton skeleton-title"></div><div class="skeleton skeleton-text"></div></div>
           </div>
@@ -286,7 +291,7 @@
              7. E-MAGAZINE / SPECIAL STORY SHOWCASE
              ================================================================ -->
         <section class="emagazine-feature" id="section-emagazine" onclick="openReaderModalById('emag-01')">
-          <img src="assets/images/lifestyle.jpg" alt="Không gian văn hóa cà phê Hà Nội" class="emagazine-bg" loading="lazy">
+          <img src="https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=1600&auto=format&fit=crop&q=80" alt="Không gian văn hóa cà phê Hà Nội" class="emagazine-bg" loading="lazy">
           <div class="emagazine-overlay"></div>
           
           <div class="emagazine-content">
@@ -505,6 +510,7 @@
        ====================================================================== -->
   <div class="modal-backdrop" id="reader-modal">
     <div class="reader-modal-card">
+      <div class="reading-progress-bar" id="reading-progress-bar"></div>
       
       <!-- Toolbar -->
       <div class="modal-header-toolbar">

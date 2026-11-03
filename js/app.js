@@ -2,16 +2,27 @@
  * ============================================================================
  * VNEWS 24H - Core Client Application Logic & UI Controllers
  * Architecture: Event-Driven, Reactive Data Binding with Dynamic RSS & Crawler
+ * Features: Multi-Source RSS, Live Full-Article Crawler, Load More,
+ *           Tag Filtering, Reading Progress Bar, AI Text-to-Speech, Bookmarks.
  * ============================================================================
  */
 
 (() => {
   'use strict';
 
+  // --- CDN Image Fallbacks ---
+  const CDN = {
+    hero: 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=1200&auto=format&fit=crop&q=80',
+    business: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800&auto=format&fit=crop&q=80',
+    tech: 'https://images.unsplash.com/photo-1466611653911-95081537e5b7?w=800&auto=format&fit=crop&q=80'
+  };
+
   // --- Global Application State ---
   const state = {
     currentSource: localStorage.getItem('vnews-source') || 'vnexpress',
     currentCategory: 'home',
+    activeFilter: 'all',
+    gridLimit: 6,
     articles: [],
     articlesMap: new Map(),
     bookmarks: JSON.parse(localStorage.getItem('vnews-bookmarks') || '[]'),
@@ -36,6 +47,8 @@
     initArticleReader();
     initSearch();
     initNavigation();
+    initSubTagFilter();
+    initLoadMore();
 
     // Initial feed fetch
     loadNewsFeed(state.currentSource, state.currentCategory, true);
@@ -116,6 +129,7 @@
       sourceSelect.value = state.currentSource;
       sourceSelect.addEventListener('change', (e) => {
         state.currentSource = e.target.value;
+        state.gridLimit = 6;
         localStorage.setItem('vnews-source', state.currentSource);
         showToast(`Đang chuyển sang nguồn báo: ${sourceSelect.options[sourceSelect.selectedIndex].text}`);
         loadNewsFeed(state.currentSource, state.currentCategory, true);
@@ -140,13 +154,41 @@
         item.classList.add('active');
 
         state.currentCategory = cat;
+        state.gridLimit = 6;
         loadNewsFeed(state.currentSource, state.currentCategory, true);
       });
     });
   }
 
   // ==========================================================================
-  // 4. Feed Ingestion & Dynamic Data Binding
+  // 4. Sub-Tag Filter & Load More
+  // ==========================================================================
+  function initSubTagFilter() {
+    const tagButtons = document.querySelectorAll('#category-sub-tags .sub-tag-btn');
+    tagButtons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        tagButtons.forEach((b) => b.classList.remove('active'));
+        btn.classList.add('active');
+        state.activeFilter = btn.getAttribute('data-filter') || 'all';
+        state.gridLimit = 6;
+        renderMainNewsGrid(state.articles);
+      });
+    });
+  }
+
+  function initLoadMore() {
+    const btn = document.getElementById('btn-load-more');
+    if (btn) {
+      btn.addEventListener('click', () => {
+        state.gridLimit += 6;
+        renderMainNewsGrid(state.articles);
+        showToast('Đã nạp thêm bài viết mới');
+      });
+    }
+  }
+
+  // ==========================================================================
+  // 5. Feed Ingestion & Dynamic Data Binding
   // ==========================================================================
   async function loadNewsFeed(source = 'vnexpress', category = 'home', showLoading = true) {
     const refreshIcon = document.getElementById('refresh-icon');
@@ -255,7 +297,7 @@
   }
 
   // ==========================================================================
-  // 5. Component Renderers
+  // 6. Component Renderers
   // ==========================================================================
   function renderTicker(articles) {
     const tickerText = document.getElementById('ticker-text');
@@ -316,7 +358,7 @@
         <article class="main-hero-card">
           <div class="main-hero-media" onclick="window.VNEWS.openReaderById('${hero.id}')">
             <span class="hero-overlay-badge"><i class="fa-solid fa-fire"></i> TIÊU ĐIỂM ${escapeHtml(hero.source.toUpperCase())}</span>
-            <img src="${escapeHtml(hero.image)}" alt="${escapeHtml(hero.title)}" onerror="this.src='assets/images/hero.jpg'">
+            <img src="${escapeHtml(hero.image)}" alt="${escapeHtml(hero.title)}" onerror="this.src='${CDN.hero}'">
           </div>
 
           <div class="main-hero-content">
@@ -358,7 +400,7 @@
         <article class="sub-hero-card" onclick="window.VNEWS.openReaderById('${art.id}')">
           <div class="card-media">
             <span class="category-tag ${idx === 0 ? 'blue' : 'gold'}">${escapeHtml(art.category)}</span>
-            <img src="${escapeHtml(art.image)}" alt="${escapeHtml(art.title)}" loading="lazy" onerror="this.src='assets/images/business.jpg'">
+            <img src="${escapeHtml(art.image)}" alt="${escapeHtml(art.title)}" loading="lazy" onerror="this.src='${CDN.business}'">
           </div>
           <div class="card-body">
             <h3 class="card-title">${escapeHtml(art.title)}</h3>
@@ -385,16 +427,41 @@
 
   function renderMainNewsGrid(articles) {
     const grid = document.getElementById('main-news-grid');
+    const loadMoreBtn = document.getElementById('btn-load-more');
     if (!grid) return;
 
-    const list = articles.length > 9 ? articles.slice(9, 18) : articles.slice(3, 12);
+    // Filter by tag if selected
+    let pool = articles.slice(3); // Skip top 3 hero stories
+    if (state.activeFilter !== 'all') {
+      const kw = state.activeFilter.toLowerCase();
+      pool = pool.filter((art) => {
+        const text = `${art.title} ${art.sapo} ${art.category}`.toLowerCase();
+        if (kw === 'kinhdoanh') return /kinh|doanh|tài chính|giá vàng|chứng khoán|doanh nghiệp/i.test(text);
+        if (kw === 'congnghe') return /công nghệ|ai|khoa học|số hóa|máy tính|điện thoại/i.test(text);
+        if (kw === 'thethao') return /thể thao|bóng đá|giải|vô địch|cầu thủ|đua/i.test(text);
+        return true;
+      });
+    }
+
+    const visibleItems = pool.slice(0, state.gridLimit);
     const tagColors = ['blue', 'gold', 'red'];
 
-    grid.innerHTML = list.map((art, idx) => `
+    if (!visibleItems.length) {
+      grid.innerHTML = `
+        <div style="grid-column: 1/-1; text-align: center; padding: 3rem 1rem; color: var(--text-muted);">
+          <i class="fa-regular fa-newspaper" style="font-size: 2.5rem; opacity: 0.5; margin-bottom: 0.5rem; display: block;"></i>
+          <p>Không có tin tức nào phù hợp với bộ lọc này.</p>
+        </div>
+      `;
+      if (loadMoreBtn) loadMoreBtn.style.display = 'none';
+      return;
+    }
+
+    grid.innerHTML = visibleItems.map((art, idx) => `
       <article class="news-card" onclick="window.VNEWS.openReaderById('${art.id}')">
         <div class="card-media">
           <span class="category-tag ${tagColors[idx % 3]}">${escapeHtml(art.category)}</span>
-          <img src="${escapeHtml(art.image)}" alt="${escapeHtml(art.title)}" loading="lazy" onerror="this.src='assets/images/green_tech.jpg'">
+          <img src="${escapeHtml(art.image)}" alt="${escapeHtml(art.title)}" loading="lazy" onerror="this.src='${CDN.tech}'">
         </div>
         <div class="card-body">
           <h3 class="card-title">${escapeHtml(art.title)}</h3>
@@ -406,6 +473,16 @@
         </div>
       </article>
     `).join('');
+
+    // Toggle Load More button visibility
+    if (loadMoreBtn) {
+      if (visibleItems.length >= pool.length) {
+        loadMoreBtn.style.display = 'none';
+      } else {
+        loadMoreBtn.style.display = 'inline-flex';
+        loadMoreBtn.innerHTML = `<i class="fa-solid fa-angles-down"></i> Xem Thêm Tin (${pool.length - visibleItems.length} tin)`;
+      }
+    }
   }
 
   function renderTrendingList(articles) {
@@ -427,10 +504,12 @@
   }
 
   // ==========================================================================
-  // 6. Reader Modal & Automatic Web Crawler
+  // 7. Reader Modal & Web Crawler
   // ==========================================================================
   function initArticleReader() {
     const modal = document.getElementById('reader-modal');
+    const scrollContainer = document.querySelector('.modal-body-scroll');
+    const progressBar = document.getElementById('reading-progress-bar');
     const closeBtn = document.getElementById('modal-close-btn');
     const fontPlusBtn = document.getElementById('font-plus-btn');
     const fontMinusBtn = document.getElementById('font-minus-btn');
@@ -446,6 +525,17 @@
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') closeReaderModal();
     });
+
+    // Reading Progress Bar
+    if (scrollContainer && progressBar) {
+      scrollContainer.addEventListener('scroll', () => {
+        const total = scrollContainer.scrollHeight - scrollContainer.clientHeight;
+        if (total > 0) {
+          const pct = Math.min(100, Math.max(0, (scrollContainer.scrollTop / total) * 100));
+          progressBar.style.width = `${pct}%`;
+        }
+      });
+    }
 
     if (fontPlusBtn) {
       fontPlusBtn.addEventListener('click', () => {
@@ -505,7 +595,12 @@
     state.currentArticle = article;
 
     const modal = document.getElementById('reader-modal');
+    const scrollContainer = document.querySelector('.modal-body-scroll');
+    const progressBar = document.getElementById('reading-progress-bar');
     if (!modal) return;
+
+    if (scrollContainer) scrollContainer.scrollTop = 0;
+    if (progressBar) progressBar.style.width = '0%';
 
     // Header info
     document.getElementById('modal-cat-tag').textContent = article.category || 'Tin Tiêu Điểm';
@@ -609,6 +704,9 @@
     if (!article) {
       article = state.articles.find((a) => a.id === id);
     }
+    if (!article) {
+      article = state.bookmarks.find((b) => b.id === id);
+    }
     if (!article && typeof NEWS_DATA !== 'undefined') {
       if (NEWS_DATA.mainHero.id === id) article = NEWS_DATA.mainHero;
       else if (NEWS_DATA.eMagazine.id === id) article = NEWS_DATA.eMagazine;
@@ -655,7 +753,7 @@
   }
 
   // ==========================================================================
-  // 7. Theme Toggle Controller
+  // 8. Theme Toggle Controller
   // ==========================================================================
   function initThemeToggle() {
     const themeBtn = document.getElementById('theme-toggle-btn');
@@ -685,7 +783,7 @@
   }
 
   // ==========================================================================
-  // 8. Bookmarks Controller
+  // 9. Bookmarks Controller (With Offline Support)
   // ==========================================================================
   function initBookmarks() {
     const btn = document.getElementById('bookmark-toggle-btn');
@@ -725,7 +823,18 @@
       state.bookmarks.splice(index, 1);
       showToast('Đã xóa khỏi danh sách đọc sau');
     } else {
-      state.bookmarks.unshift(article);
+      // Save article along with crawled content for offline reading
+      state.bookmarks.unshift({
+        id: article.id,
+        title: article.title,
+        sapo: article.sapo,
+        image: article.image,
+        link: article.link,
+        source: article.source,
+        category: article.category,
+        publishedAt: article.publishedAt,
+        content: article.content || ''
+      });
       showToast('Đã lưu bài viết vào danh sách đọc sau');
     }
     localStorage.setItem('vnews-bookmarks', JSON.stringify(state.bookmarks));
@@ -768,7 +877,7 @@
   }
 
   // ==========================================================================
-  // 9. Interactive Audio Player
+  // 10. Interactive Audio Player
   // ==========================================================================
   function initAudioPlayer() {
     const playBtn = document.getElementById('audio-play-toggle');
@@ -816,7 +925,7 @@
   }
 
   // ==========================================================================
-  // 10. Poll & Newsletter Widgets
+  // 11. Poll & Newsletter Widgets
   // ==========================================================================
   function initPollWidget() {
     const pollContainer = document.getElementById('poll-widget');
@@ -864,7 +973,7 @@
   }
 
   // ==========================================================================
-  // 11. Quick Search Filter
+  // 12. Quick Search Filter
   // ==========================================================================
   function initSearch() {
     const searchInput = document.getElementById('quick-search-input');
@@ -891,7 +1000,7 @@
   }
 
   // ==========================================================================
-  // 12. Global Public Interface (VNEWS namespace)
+  // 13. Global Public Interface (VNEWS namespace)
   // ==========================================================================
   window.VNEWS = {
     openReaderById: (id) => openReaderModalById(id),

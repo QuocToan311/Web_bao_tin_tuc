@@ -200,7 +200,7 @@ function parseRssXml(xmlText, category = 'home', sourceKey = 'vnexpress') {
       title: rawTitle,
       link: rawLink,
       sapo: cleanSapo || 'Bấm vào bài viết để xem nội dung chi tiết...',
-      image: imageUrl || 'assets/images/hero.jpg',
+      image: imageUrl || 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=1200&auto=format&fit=crop&q=80',
       pubDate: pubDateMatch ? pubDateMatch[1].trim() : '',
       publishedAt: pubDateMatch ? formatRelativeTime(pubDateMatch[1]) : 'Vừa xong',
       source: sourceName,
@@ -406,7 +406,13 @@ const server = http.createServer(async (req, res) => {
   if (pathname === '/api/article') {
     const targetUrl = searchParams.get('url');
     if (!targetUrl) {
-      return sendJson(res, 400, { success: false, error: 'Thiếu tham số url bài viết' });
+      return sendJson(res, 400, {
+        success: false,
+        error: 'Thiếu tham số url bài viết',
+        message: 'Endpoint này là API crawl dữ liệu bài báo. Vui lòng truyền tham số ?url=<LINK_BÀI_BÁO> hoặc truy cập trang chủ http://localhost:3000 để đọc báo trên giao diện.',
+        usage: 'GET /api/article?url=<LINK_BÀI_BÁO>',
+        example: 'http://localhost:3000/api/article?url=https://vnexpress.net/cat-xuyen-dong-phuong-tien-nguoi-di-xe-may-tong-thang-vao-hong-oto-5139969.html'
+      });
     }
 
     try {
