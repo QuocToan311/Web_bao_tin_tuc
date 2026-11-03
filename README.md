@@ -1,51 +1,54 @@
 # VNEWS 24H - BÁO ĐIỆN TỬ TRI THỨC & CÔNG NGHỆ SỐ
 
-Trang web báo tin tức điện tử hiện đại, tối ưu SEO, hỗ trợ đa phương tiện, giao diện chuẩn báo chí cao cấp (Editorial Design), tích hợp đầy đủ các tính năng độc giả tương tác và khả năng đọc báo bằng giọng nói AI.
+Trang web báo tin tức điện tử hiện đại, tối ưu SEO, hỗ trợ đa phương tiện, giao diện chuẩn báo chí cao cấp (Editorial Design), tích hợp đầy đủ hệ thống **xử lý RSS đa nguồn, bóc tách XML thời gian thực, tự động crawl bài viết toàn văn** và đọc báo bằng giọng nói AI.
 
 ---
 
 ## 🌟 Các Tính Năng Đã Hiện Thực
 
-### 1. Phân Hệ Độc Giả & Giao Diện Trang Chủ (Client UI)
-* **Thanh tiện ích đầu trang (Top Bar):**
-  * Lịch và đồng hồ thời gian thực (Hà Nội, giờ:phút:giây).
-  * Tiện ích thời tiết theo khu vực.
-  * Chỉ số thị trường cập nhật (VN-Index, Vàng miếng SJC, Tỷ giá USD).
-  * Nút chuyển đổi giao diện **Chế độ Sáng / Tối (Dark / Light Mode)** với lưu trữ trạng thái tự động (`localStorage`).
-  * Nút xem danh sách bài viết đã lưu để đọc sau (**Bookmarks Drawer**).
-* **Masthead & Nhận diện thương hiệu:**
-  * Logo thương hiệu báo chí nổi bật với khẩu hiệu tòa soạn.
-  * Thanh tìm kiếm thông minh (Live Search Filter) lọc tức thì theo từ khóa.
-  * Đường dây nóng Tòa soạn (Hotline 24/7).
-* **Thanh điều hướng dính (Sticky Mega-Nav):**
-  * Danh mục chuyên môn: Thời sự, Kinh doanh, Công nghệ AI, Năng lượng Xanh, Thể thao, E-Magazine, Góc nhìn, Đời sống.
-  * Nút hành động nhanh: **Nghe Tin Nhanh 60s**.
-* **Dòng tin nóng chạy tự động (Breaking News Ticker):**
-  * Tự động chuyển đổi tin khẩn mỗi 4.5 giây với hiệu ứng mượt mà, có nút chuyển tiếp/lùi và tự dừng khi rê chuột.
-* **Bản tin Âm thanh Tóm tắt 60s (Smart AI Audio Bar):**
-  * Trình phát âm thanh mini tích hợp visualizer sóng âm động (CSS Sound Wave) và đọc bản tin ngắn qua giọng AI.
-* **Bố cục Tiêu điểm 3 Cột (Hero Section 3-Column Grid):**
-  * *Cột trái:* 2 bài tiêu điểm phụ với hình ảnh sắc nét, phân loại chuyên mục và thời gian đăng.
-  * *Cột giữa:* Tin tiêu điểm đặc biệt (Super Hero) với ảnh khổ lớn chất lượng cao, tiêu đề sang trọng, sapo và thông tin tác giả.
-  * *Cột phải:* **Dòng sự kiện 24/7** cập nhật tin vắn theo từng phút với chấm xanh trạng thái trực tiếp.
-* **Chuyên mục Kinh Doanh & Công Nghệ:**
-  * Lưới bài viết dạng Magazine Card có gắn nhãn phân loại, lượt xem, thời gian đọc và nút lưu nhanh.
-* **Chuyên đề Đa Phương Tiện E-Magazine (Longform Special):**
-  * Thiết kế tràn viền nghệ thuật, nền ảnh phủ gradient điện ảnh và typography chuẩn tạp chí.
-* **Góc Nhìn & Đối Thoại (Editorial Columnists):**
-  * Thẻ trích dẫn ý kiến nổi bật của các chuyên gia đầu ngành kèm avatar và học vị.
-* **Sidebar Tương Tác Cao (High-Engagement Sidebar):**
-  * **Top 5 Đọc Nhiều Nhất 24h:** Xếp hạng với số thứ tự lớn cách điệu.
-  * **Bảng Giá Thị Trường:** Tỷ giá ngoại tệ, giá vàng, dầu thô và chứng khoán.
-  * **Khảo Sát Độc Giả (Interactive Poll):** Độc giả biểu quyết trực tiếp, hệ thống tự động tính toán và hiển thị thanh tỷ lệ phần trăm động.
-  * **Hộp Đăng Ký Bản Tin Sáng (Newsletter Subscription):** Form nhập email kèm thông báo toast xác nhận.
+### 1. Phân Hệ Xử Lý RSS Đa Nguồn & Bóc Tách XML Thời Gian Thực
+* **Hỗ trợ 4 nguồn báo chí hàng đầu Việt Nam:**
+  * **VnExpress** (Tin mới nhất, Thời sự, Kinh doanh, Khoa học công nghệ, Thể thao, Giải trí, Đời sống).
+  * **Tuổi Trẻ** (Tin mới nhất, Thời sự, Kinh doanh, Nhịp sống số, Thể thao, Giải trí, Văn hóa).
+  * **Thanh Niên** (Trang chủ, Thời sự, Kinh tế, Công nghệ, Thể thao, Giải trí, Đời sống).
+  * **Dân Trí** (Trang chủ, Xã hội, Kinh doanh, Sức mạnh số, Thể thao, Giải trí, Đời sống).
+* **Bộ Phân Tích XML (Balanced Tag & CDATA Parser):**
+  * Tự động bóc tách Title, Link, Description, Sapo, Enclosure image, PubDate.
+  * Lọc ảnh chất lượng cao và làm sạch mã HTML thừa.
+* **Bộ Đệm Dữ Liệu Bộ Nhớ (In-Memory Cache với TTL):**
+  * Cache luồng tin RSS 5 phút giúp website phản hồi siêu tốc (< 15ms) và không bị nguồn báo chặn IP.
+  * Cache bài viết chi tiết crawl được 30 phút.
+* **Chuyển Đổi Nguồn & Chuyên Mục Linh Hoạt:**
+  * Dropdown chọn nguồn báo ngay tại Top Bar và thanh điều hướng danh mục không cần reload trang.
+  * Nút làm mới tức thì (`Refresh`) kèm hiệu ứng xoay icon.
+  * Tự động làm mới ngầm (Auto-polling) mỗi 5 phút.
 
-### 2. Trình Xem Bài Viết Nhanh & Bình Luận Thời Gian Thực (Reader Modal)
-* Bấm vào bất kỳ bài báo nào trên trang để mở cửa sổ đọc chuyên sâu.
-* Hỗ trợ tăng/giảm kích thước chữ (`A+` / `A-`) cho người lớn tuổi hoặc đọc ban đêm.
-* Tính năng **Nghe AI đọc** bài viết sử dụng Web Speech API tiếng Việt.
-* Đầy đủ hình ảnh phóng to, chú thích ảnh, nội dung phân đoạn và trích dẫn.
-* **Khu vực bình luận:** Bạn đọc có thể nhập tên và gửi ý kiến đóng góp, bài bình luận xuất hiện ngay lập tức trên trang.
+### 2. Bộ Tự Động Crawl Bài Viết Toàn Văn (Full Article Crawler)
+* Khi độc giả bấm vào bất kỳ bài báo nào trên trang:
+  * Trình duyệt gọi Endpoint `/api/article?url=...`.
+  * Server tự động tải trang HTML bài viết gốc, bóc tách Tiêu đề, Sapo, Tác giả, Thời gian đăng, và **toàn văn nội dung bài báo** (bao gồm toàn bộ các đoạn văn `<p>`, hình ảnh sắc nét `<img>` kèm chú thích `<figcaption>`).
+  * Loại bỏ hoàn toàn mã độc, script, quảng cáo, tracking và banner phiền toái.
+  * Hiển thị bài viết sạch đẹp trong **Reader Modal** và cung cấp nút mở bài gốc tại tòa soạn.
+
+### 3. Đổ Dữ Liệu RSS Lên Toàn Bộ Giao Diện (Data Binding)
+* **Breaking News Ticker:** Tự động lấy 8 tin nóng nhất từ luồng RSS đang chọn để chạy dòng chữ khẩn cấp.
+* **Bố cục Hero 3 Cột Tiêu Điểm:**
+  * *Tâm điểm (Super Hero):* Bài viết đầu bảng với ảnh lớn, tiêu đề sang trọng, sapo và nhãn nguồn tin.
+  * *Cột trái (Sub-Heroes):* 2 bài tiêu điểm kế tiếp với nhãn màu chuyên mục.
+  * *Cột phải (Dòng sự kiện 24/7):* 6 bài viết mới nhất cập nhật theo mốc thời gian giờ:phút.
+* **Lưới Bài Viết Chuyên Mục (Magazine Grid):** Hiển thị danh sách các bài viết tiếp theo dạng thẻ bài báo cao cấp kèm nút Bookmark đọc sau.
+* **Sidebar Top Đọc Nhiều:** Top 5 bài viết nổi bật được xếp thứ tự trực quan.
+* **Skeleton Loading Shimmer:** Hiệu ứng khung xám ánh sáng lượn sóng trong lúc đang tải dữ liệu RSS.
+
+### 4. Tiện Ích Độc Giả & Đọc Báo Bằng Giọng Nói AI
+* **AI Text-To-Speech (Báo Nói Thông Minh):**
+  * Nghe đọc to toàn bộ nội dung bài viết vừa crawl được bằng giọng tiếng Việt chuẩn.
+  * Thanh nghe tin nhanh 60s tích hợp visualizer sóng âm động (CSS Sound Wave).
+* **Quản Lý Bài Viết Đọc Sau (Bookmarks Drawer):** Lưu bài viết vào `localStorage`, xem lại và xóa bất cứ lúc nào.
+* **Chế Độ Sáng / Tối (Dark & Light Theme):** Chuyển đổi giao diện tức thì với màu sắc êm dịu cho mắt khi đọc đêm.
+* **Tùy Chỉnh Cỡ Chữ (A+ / A-):** Tăng giảm kích thước chữ trong cửa sổ đọc bài.
+* **Tìm Kiếm Nhanh (Live Search Filter):** Nhập từ khóa và nhấn Enter để tìm kiếm tức thì trên danh sách tin tức.
+* **Thăm Dò Ý Kiến Độc Giả (Interactive Poll):** Biểu quyết trực tiếp và cập nhật thanh phần trăm tức thì.
 
 ---
 
@@ -55,7 +58,7 @@ Trang web báo tin tức điện tử hiện đại, tối ưu SEO, hỗ trợ �
    ```bash
    cd d:\study\Web_bao_tin_tuc
    ```
-2. Chạy máy chủ tĩnh cục bộ bằng Node.js:
+2. Chạy máy chủ tĩnh & API Server:
    ```bash
    node server.js
    ```
@@ -63,7 +66,15 @@ Trang web báo tin tức điện tử hiện đại, tối ưu SEO, hỗ trợ �
    ```
    http://localhost:3000
    ```
-*(Hoặc bạn có thể click đúp trực tiếp vào tệp `index.html` trong File Explorer để xem trực tiếp).*
+
+### 📡 Danh Sách API Endpoints Cung Cấp
+* **Lấy danh sách tin RSS:**
+  `GET http://localhost:3000/api/rss?source=vnexpress&category=home`
+  *(Hỗ trợ `source`: vnexpress, tuoitre, thanhnien, dantri | `category`: home, thoisu, kinhdoanh, congnghe, thethao, giaitri, doisong)*
+* **Crawl toàn văn bài viết:**
+  `GET http://localhost:3000/api/article?url=https://vnexpress.net/...`
+* **Danh sách nguồn báo & chuyên mục:**
+  `GET http://localhost:3000/api/sources`
 
 ---
 
@@ -71,18 +82,18 @@ Trang web báo tin tức điện tử hiện đại, tối ưu SEO, hỗ trợ �
 
 ```
 Web_bao_tin_tuc/
-├── index.html            # Khung sườn HTML5 chuẩn SEO & Semantic
-├── server.js             # Máy chủ tĩnh Node.js phục vụ kiểm thử cục bộ
+├── index.html            # Khung sườn HTML5 chuẩn SEO & Semantic (Containers động)
+├── server.js             # Máy chủ Node.js (RSS Proxy, XML Parser, In-Memory Cache & Web Crawler)
 ├── css/
-│   └── style.css         # Hệ thống thiết kế (Tokens, Dark/Light, Layout, Animations)
+   └── style.css         # Hệ thống thiết kế (Tokens, Dark/Light, Layout, Skeletons, Animations)
 ├── js/
-│   ├── data.js           # Cơ sở dữ liệu mẫu: bài viết, chuyên mục, bình luận, ticker
-│   └── app.js            # Toàn bộ logic tương tác (Theme, Bookmark, Audio, Modal, Poll)
+   ├── data.js           # Cơ sở dữ liệu dự phòng (Offline fallback)
+   └── app.js            # Core App (RSS Data Binding, Crawler Loader, Theme, Bookmark, Audio, Modal)
 └── assets/
     └── images/           # Ảnh báo chí chuẩn phân giải cao
-        ├── hero.jpg          (Hội nghị Thượng đỉnh AI Toàn cầu)
-        ├── business.jpg      (Thị trường tài chính & Phố Wall)
-        ├── green_tech.jpg    (Năng lượng gió & mặt trời ngoài khơi)
-        ├── sports.jpg        (Trận chung kết bóng đá đỉnh cao)
-        └── lifestyle.jpg     (Không gian văn hóa cà phê Hà Nội)
+        ├── hero.jpg
+        ├── business.jpg
+        ├── green_tech.jpg
+        ├── sports.jpg
+        └── lifestyle.jpg
 ```
