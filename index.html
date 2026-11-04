@@ -14,7 +14,7 @@
   <meta property="og:url" content="https://vnews24h.vn/">
   <meta property="og:title" content="VNEWS 24H - Tin tức Đa chiều, Chính xác và Kịp thời">
   <meta property="og:description" content="Trải nghiệm đọc báo chuẩn mực với tin tức dòng sự kiện, đọc báo bằng giọng nói AI và các chuyên đề phóng sự đặc sắc.">
-  <meta property="og:image" content="assets/images/hero.jpg">
+  <meta property="og:image" content="https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=1200&auto=format&fit=crop&q=80">
   <!-- Icons & Fonts -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="stylesheet" href="css/style.css">
@@ -63,6 +63,20 @@
       </div>
 
       <div class="top-bar-right">
+        <!-- Source Selector & Live Refresh -->
+        <div class="source-selector-bar">
+          <i class="fa-solid fa-tower-broadcast" style="color: var(--accent-crimson);"></i>
+          <label for="news-source-select" style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600;">Nguồn:</label>
+          <select id="news-source-select" title="Chọn nguồn báo lấy tin RSS">
+            <option value="vnexpress" selected>VnExpress</option>
+            <option value="tuoitre">Tuổi Trẻ</option>
+            <option value="thanhnien">Thanh Niên</option>
+            <option value="dantri">Dân Trí</option>
+          </select>
+          <button class="btn-refresh-feed" id="btn-refresh-feed" title="Tải lại tin mới nhất">
+            <i class="fa-solid fa-arrows-rotate" id="refresh-icon"></i>
+          </button>
+        </div>
         <!-- Bookmark Trigger -->
         <button class="bookmark-toggle-btn" id="bookmark-toggle-btn" title="Xem danh sách bài đã lưu">
           <i class="fa-solid fa-bookmark" style="color: var(--accent-crimson);"></i>
@@ -121,16 +135,15 @@
        ====================================================================== -->
   <nav class="main-nav" aria-label="Điều hướng chính">
     <div class="container nav-inner">
-      <ul class="nav-links">
-        <li class="nav-item active"><a href="#"><i class="fa-solid fa-house"></i> Trang chủ</a></li>
-        <li class="nav-item"><a href="#section-news">Thời sự</a></li>
-        <li class="nav-item"><a href="#section-news">Kinh doanh</a></li>
-        <li class="nav-item"><a href="#section-news">Công nghệ AI</a></li>
-        <li class="nav-item"><a href="#section-news">Năng lượng Xanh</a></li>
-        <li class="nav-item"><a href="#section-news">Thể thao</a></li>
-        <li class="nav-item"><a href="#section-emagazine" class="special"><i class="fa-solid fa-crown" style="color: var(--accent-gold);"></i> E-Magazine</a></li>
-        <li class="nav-item"><a href="#section-opinions">Góc nhìn</a></li>
-        <li class="nav-item"><a href="#section-opinions">Văn hóa & Đời sống</a></li>
+      <ul class="nav-links" id="main-nav-links">
+        <li class="nav-item active" data-category="home"><a href="javascript:void(0)"><i class="fa-solid fa-house"></i> Trang chủ</a></li>
+        <li class="nav-item" data-category="thoisu"><a href="javascript:void(0)">Thời sự</a></li>
+        <li class="nav-item" data-category="kinhdoanh"><a href="javascript:void(0)">Kinh doanh</a></li>
+        <li class="nav-item" data-category="congnghe"><a href="javascript:void(0)">Công nghệ AI</a></li>
+        <li class="nav-item" data-category="thethao"><a href="javascript:void(0)">Thể thao</a></li>
+        <li class="nav-item" data-category="giaitri"><a href="javascript:void(0)">Giải trí</a></li>
+        <li class="nav-item" data-category="doisong"><a href="javascript:void(0)">Đời sống</a></li>
+        <li class="nav-item special"><a href="#section-emagazine"><i class="fa-solid fa-crown" style="color: var(--accent-gold);"></i> E-Magazine</a></li>
       </ul>
 
       <div class="nav-actions">
@@ -204,74 +217,21 @@
       <div class="hero-grid">
 
         <!-- Column 1: Sub-Hero Stories (Trái) -->
-        <div class="sub-hero-col">
-          <!-- Sub-Card 1 -->
-          <article class="sub-hero-card" onclick="openReaderModalById('sub-01')">
-            <div class="card-media">
-              <span class="category-tag blue">Kinh Doanh</span>
-              <img src="assets/images/business.jpg" alt="Thị trường tài chính chứng khoán" loading="lazy">
-            </div>
-            <div class="card-body">
-              <h3 class="card-title">Phố Wall và Thị trường Châu Á Đồng Loạt Khởi Sắc Sau Tín Hiệu Lãi Suất Mới</h3>
-              <div class="card-meta">
-                <span class="time-read"><i class="fa-regular fa-clock"></i> 15:40</span>
-                <span><i class="fa-regular fa-eye"></i> 14.2K</span>
-              </div>
-            </div>
-          </article>
-
-          <!-- Sub-Card 2 -->
-          <article class="sub-hero-card" onclick="openReaderModalById('sub-02')">
-            <div class="card-media">
-              <span class="category-tag gold">Năng Lượng Xanh</span>
-              <img src="assets/images/green_tech.jpg" alt="Dự án năng lượng gió và mặt trời" loading="lazy">
-            </div>
-            <div class="card-body">
-              <h3 class="card-title">Đại Dự Án Điện Gió Ngoài Khơi Hòa Lưới Điện Quốc Gia: Bước Tiến Vượt Bậc Về Net-Zero</h3>
-              <div class="card-meta">
-                <span class="time-read"><i class="fa-regular fa-clock"></i> 14:20</span>
-                <span><i class="fa-regular fa-eye"></i> 18.7K</span>
-              </div>
-            </div>
-          </article>
+        <div class="sub-hero-col" id="sub-hero-container">
+          <div class="skeleton skeleton-img" style="height: 140px;"></div>
+          <div class="skeleton skeleton-title" style="width: 80%;"></div>
+          <div class="skeleton skeleton-img" style="height: 140px; margin-top: 1.5rem;"></div>
+          <div class="skeleton skeleton-title" style="width: 80%;"></div>
         </div>
 
         <!-- Column 2: Center Big Hero (Tâm điểm) -->
-        <div class="main-hero-col">
-          <article class="main-hero-card">
-            <div class="main-hero-media" onclick="openReaderModalById('hero-01')">
-              <span class="hero-overlay-badge"><i class="fa-solid fa-fire"></i> TIÊU ĐIỂM TOÀN CẦU</span>
-              <img src="assets/images/hero.jpg" alt="Hội nghị Thượng đỉnh Trí tuệ Nhân tạo Toàn cầu 2026">
-            </div>
-
-            <div class="main-hero-content">
-              <h2 class="main-hero-title" onclick="openReaderModalById('hero-01')">
-                Khai mạc Hội nghị Thượng đỉnh AI Toàn cầu 2026: Định hình Kỷ nguyên Siêu Trí tuệ và Chuẩn mực Đạo đức Mới
-              </h2>
-              
-              <p class="main-hero-sapo">
-                Hơn 5.000 chuyên gia công nghệ, các nhà khoa học hàng đầu và đại diện từ 60 quốc gia đã hội tụ để thống nhất bộ khung pháp lý quốc tế đầu tiên về kiểm soát rủi ro AI và mở rộng ứng dụng trí tuệ nhân tạo trong y tế, năng lượng sạch.
-              </p>
-
-              <div class="hero-actions-row">
-                <div class="author-info">
-                  <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80" alt="TS. Nguyễn Minh Triết" class="author-avatar">
-                  <div>
-                    <div class="author-name">TS. Nguyễn Minh Triết</div>
-                    <div style="font-size: 0.75rem; color: var(--text-muted);">16:15 Hôm nay • 5 phút đọc</div>
-                  </div>
-                </div>
-
-                <div class="hero-btn-group">
-                  <button class="btn-action-icon" title="Lưu bài viết" onclick="toggleBookmark(NEWS_DATA.mainHero)">
-                    <i class="fa-regular fa-bookmark"></i>
-                  </button>
-                  <button class="btn-read-now" onclick="openReaderModalById('hero-01')">
-                    Đọc toàn bài <i class="fa-solid fa-arrow-right" style="margin-left: 0.25rem;"></i>
-                  </button>
-                </div>
-              </div>
-            </div>
+        <div class="main-hero-col" id="main-hero-container">
+          <article class="main-hero-card" style="padding: 1.5rem;">
+            <div class="skeleton skeleton-img" style="height: 320px;"></div>
+            <div class="skeleton skeleton-title" style="width: 85%;"></div>
+            <div class="skeleton skeleton-title" style="width: 70%;"></div>
+            <div class="skeleton skeleton-text" style="width: 100%;"></div>
+            <div class="skeleton skeleton-text" style="width: 90%;"></div>
           </article>
         </div>
 
@@ -283,34 +243,15 @@
           </div>
 
           <div class="feed-list" id="feed-list-container">
-            <!-- Feed Items rendered dynamically -->
-            <div class="feed-item" onclick="openReaderModalById('feed-1')">
-              <span class="feed-item-time">16:45</span>
-              <p class="feed-item-title">Bộ Giao thông Vận tải thông tin tiến độ dự án đường sắt tốc độ cao Bắc - Nam</p>
-            </div>
-            <div class="feed-item" onclick="openReaderModalById('feed-2')">
-              <span class="feed-item-time">16:30</span>
-              <p class="feed-item-title">Giá vàng trong nước giữ vững mốc 89,5 triệu đồng/lượng sau nhịp biến động</p>
-            </div>
-            <div class="feed-item" onclick="openReaderModalById('feed-3')">
-              <span class="feed-item-time">16:15</span>
-              <p class="feed-item-title">Chung kết Champions League: Chiến thuật nào sẽ giúp đội bóng xưng vương?</p>
-            </div>
-            <div class="feed-item" onclick="openReaderModalById('feed-4')">
-              <span class="feed-item-time">15:55</span>
-              <p class="feed-item-title">Khám phá phong vị cà phê rang mộc Thủ đô qua con mắt của du khách quốc tế</p>
-            </div>
-            <div class="feed-item" onclick="openReaderModalById('feed-5')">
-              <span class="feed-item-time">15:35</span>
-              <p class="feed-item-title">Chuyên gia an ninh mạng cảnh báo thủ đoạn lừa đảo giả mạo mã QR mới</p>
-            </div>
-            <div class="feed-item" onclick="openReaderModalById('feed-6')">
-              <span class="feed-item-time">15:10</span>
-              <p class="feed-item-title">Xuất khẩu thủy sản quý 3 tăng trưởng hai con số tại thị trường Mỹ và EU</p>
+            <div style="padding: 1rem;">
+              <div class="skeleton skeleton-text" style="width: 40%; margin-bottom: 1rem;"></div>
+              <div class="skeleton skeleton-text" style="width: 90%;"></div>
+              <div class="skeleton skeleton-text" style="width: 75%; margin-bottom: 1rem;"></div>
+              <div class="skeleton skeleton-text" style="width: 90%;"></div>
+              <div class="skeleton skeleton-text" style="width: 80%;"></div>
             </div>
           </div>
         </div>
-
       </div>
     </section>
 
@@ -325,63 +266,24 @@
         <!-- Category Section: Kinh Doanh & Công Nghệ -->
         <div class="section-wrapper" style="margin-top: 0;">
           <div class="section-head">
-            <h2 class="section-title"><i class="fa-solid fa-chart-line" style="color: var(--accent-blue);"></i> Kinh Doanh & Đổi Mới</h2>
-            <div class="section-tags">
-              <button class="sub-tag-btn active">Tất cả</button>
-              <button class="sub-tag-btn">Tài chính</button>
-              <button class="sub-tag-btn">Bất động sản</button>
-              <button class="sub-tag-btn">Khởi nghiệp</button>
+            <h2 class="section-title" id="category-section-title"><i class="fa-solid fa-bolt" style="color: var(--accent-blue);"></i> Tin Tức Mới Nhất</h2>
+            <div class="section-tags" id="category-sub-tags">
+              <button class="sub-tag-btn active" data-filter="all">Tất cả</button>
+              <button class="sub-tag-btn" data-filter="kinhdoanh">Kinh doanh</button>
+              <button class="sub-tag-btn" data-filter="congnghe">Công nghệ & AI</button>
+              <button class="sub-tag-btn" data-filter="thethao">Thể thao</button>
             </div>
           </div>
 
-          <div class="news-cards-grid">
-            <!-- News Card 1 -->
-            <article class="news-card" onclick="openReaderModalById('biz-01')">
-              <div class="card-media">
-                <span class="category-tag blue">Tài Chính Số</span>
-                <img src="assets/images/business.jpg" alt="Giao dịch không tiền mặt" loading="lazy">
-              </div>
-              <div class="card-body">
-                <h3 class="card-title">Chuyển Đổi Số Trong Ngành Ngân Hàng: Khi Thanh Toán Không Chạm Trở Thành Lựa Chọn Thống Trị</h3>
-                <p class="card-sapo">Tỷ lệ giao dịch trực tuyến qua mã QR và ví điện tử đạt mức kỷ lục 82%, định hình lại hành vi chi tiêu.</p>
-                <div class="card-meta">
-                  <span>13:45 • Nguyễn Văn Hưng</span>
-                  <span><i class="fa-regular fa-bookmark" onclick="event.stopPropagation(); toggleBookmark(NEWS_DATA.businessNews[0]);"></i></span>
-                </div>
-              </div>
-            </article>
-
-            <!-- News Card 2 -->
-            <article class="news-card" onclick="openReaderModalById('biz-02')">
-              <div class="card-media">
-                <span class="category-tag gold">Công Nghệ Xanh</span>
-                <img src="assets/images/green_tech.jpg" alt="Pin xe điện thế hệ mới" loading="lazy">
-              </div>
-              <div class="card-body">
-                <h3 class="card-title">Pin Thế Hệ Mới Đột Phá: Sạc Đầy Xe Điện Chỉ Trong 10 Phút Với Độ Bền 1 Triệu Km</h3>
-                <p class="card-sapo">Công nghệ pin thể rắn vừa được thương mại hóa thành công, giải quyết triệt để nỗi lo sạc pin.</p>
-                <div class="card-meta">
-                  <span>12:10 • Trịnh Thùy Linh</span>
-                  <span><i class="fa-regular fa-bookmark" onclick="event.stopPropagation(); toggleBookmark(NEWS_DATA.businessNews[1]);"></i></span>
-                </div>
-              </div>
-            </article>
-
-            <!-- News Card 3 -->
-            <article class="news-card" onclick="openReaderModalById('biz-03')">
-              <div class="card-media">
-                <span class="category-tag red">Thể Thao</span>
-                <img src="assets/images/sports.jpg" alt="Khoảnh khắc chiến thắng bóng đá" loading="lazy">
-              </div>
-              <div class="card-body">
-                <h3 class="card-title">Bàn Thắng Vàng Phút Bù Giờ Thứ 94 Đưa Đội Tuyển Vào Lịch Sử Vòng Loại Thế Giới</h3>
-                <p class="card-sapo">Màn lội ngược dòng ngoạn mục đầy cảm xúc làm nức lòng hàng triệu người hâm mộ sau 120 phút nghẹt thở.</p>
-                <div class="card-meta">
-                  <span>11:30 • Vũ Hải Đăng</span>
-                  <span><i class="fa-regular fa-bookmark" onclick="event.stopPropagation(); toggleBookmark(NEWS_DATA.businessNews[2]);"></i></span>
-                </div>
-              </div>
-            </article>
+          <div class="news-cards-grid" id="main-news-grid">
+            <div class="news-card"><div class="skeleton skeleton-img"></div>
+          <div class="load-more-wrapper">
+            <button id="btn-load-more" class="btn-load-more">
+              <i class="fa-solid fa-angles-down"></i> Xem Thêm Tin Tức
+            </button>
+          </div><div class="skeleton skeleton-title"></div><div class="skeleton skeleton-text"></div></div>
+            <div class="news-card"><div class="skeleton skeleton-img"></div><div class="skeleton skeleton-title"></div><div class="skeleton skeleton-text"></div></div>
+            <div class="news-card"><div class="skeleton skeleton-img"></div><div class="skeleton skeleton-title"></div><div class="skeleton skeleton-text"></div></div>
           </div>
         </div>
 
@@ -389,7 +291,7 @@
              7. E-MAGAZINE / SPECIAL STORY SHOWCASE
              ================================================================ -->
         <section class="emagazine-feature" id="section-emagazine" onclick="openReaderModalById('emag-01')">
-          <img src="assets/images/lifestyle.jpg" alt="Không gian văn hóa cà phê Hà Nội" class="emagazine-bg" loading="lazy">
+          <img src="https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=1600&auto=format&fit=crop&q=80" alt="Không gian văn hóa cà phê Hà Nội" class="emagazine-bg" loading="lazy">
           <div class="emagazine-overlay"></div>
           
           <div class="emagazine-content">
@@ -454,46 +356,10 @@
         <!-- Widget 1: Top 5 Đọc Nhiều Nhất -->
         <div class="sidebar-widget">
           <h3 class="widget-title"><i class="fa-solid fa-fire-flame-curved" style="color: var(--accent-crimson);"></i> Đọc Nhiều Nhất 24H</h3>
-          <div class="trending-list">
-            <div class="trending-item" onclick="openReaderModalById('top-1')">
-              <span class="rank-number">01</span>
-              <div>
-                <h4 class="trending-title">Lễ hội trình diễn ánh sáng bằng 2.026 drone thắp sáng bầu trời hồ Tây cuối tuần này</h4>
-                <span style="font-size: 0.75rem; color: var(--text-muted);"><i class="fa-regular fa-eye"></i> 82K lượt đọc</span>
-              </div>
-            </div>
-
-            <div class="trending-item" onclick="openReaderModalById('hero-01')">
-              <span class="rank-number">02</span>
-              <div>
-                <h4 class="trending-title">Hội nghị Thượng đỉnh AI 2026: Đột phá lớn nhất về chuẩn an toàn quốc tế</h4>
-                <span style="font-size: 0.75rem; color: var(--text-muted);"><i class="fa-regular fa-eye"></i> 65K lượt đọc</span>
-              </div>
-            </div>
-
-            <div class="trending-item" onclick="openReaderModalById('top-3')">
-              <span class="rank-number">03</span>
-              <div>
-                <h4 class="trending-title">Giá vàng SJC biến động mạnh: Khuyến nghị quan trọng cho nhà đầu tư cá nhân</h4>
-                <span style="font-size: 0.75rem; color: var(--text-muted);"><i class="fa-regular fa-eye"></i> 53K lượt đọc</span>
-              </div>
-            </div>
-
-            <div class="trending-item" onclick="openReaderModalById('top-4')">
-              <span class="rank-number">04</span>
-              <div>
-                <h4 class="trending-title">Đường sắt cao tốc 350 km/h: Hành trình đưa kinh tế cất cánh</h4>
-                <span style="font-size: 0.75rem; color: var(--text-muted);"><i class="fa-regular fa-eye"></i> 41K lượt đọc</span>
-              </div>
-            </div>
-
-            <div class="trending-item" onclick="openReaderModalById('top-5')">
-              <span class="rank-number">05</span>
-              <div>
-                <h4 class="trending-title">Top 10 quán cà phê đẹp tĩnh lặng thích hợp làm việc tại Hà Nội và TP.HCM</h4>
-                <span style="font-size: 0.75rem; color: var(--text-muted);"><i class="fa-regular fa-eye"></i> 38K lượt đọc</span>
-              </div>
-            </div>
+          <div class="trending-list" id="trending-list-container">
+            <div style="padding: 0.5rem 0;"><div class="skeleton skeleton-title"></div><div class="skeleton skeleton-text" style="width: 50%;"></div></div>
+            <div style="padding: 0.5rem 0;"><div class="skeleton skeleton-title"></div><div class="skeleton skeleton-text" style="width: 50%;"></div></div>
+            <div style="padding: 0.5rem 0;"><div class="skeleton skeleton-title"></div><div class="skeleton skeleton-text" style="width: 50%;"></div></div>
           </div>
         </div>
 
@@ -644,6 +510,7 @@
        ====================================================================== -->
   <div class="modal-backdrop" id="reader-modal">
     <div class="reader-modal-card">
+      <div class="reading-progress-bar" id="reading-progress-bar"></div>
       
       <!-- Toolbar -->
       <div class="modal-header-toolbar">
@@ -656,6 +523,9 @@
           <button class="font-size-btn" onclick="showToast('Đã sao chép liên kết bài viết vào clipboard!')" title="Chia sẻ">
             <i class="fa-solid fa-share-nodes"></i>
           </button>
+          <a id="modal-original-link" href="#" target="_blank" rel="noopener" class="font-size-btn" title="Mở bài viết gốc tại nguồn báo" style="text-decoration: none; display: flex; align-items: center; justify-content: center;">
+            <i class="fa-solid fa-arrow-up-right-from-square"></i>
+          </a>
         </div>
 
         <button class="modal-close-btn" id="modal-close-btn" title="Đóng cửa sổ">
@@ -685,6 +555,7 @@
         </figure>
 
         <!-- Body paragraphs -->
+        <div id="modal-crawler-status"></div>
         <div class="article-content-text" id="modal-body-content"></div>
 
         <!-- Comments Section -->
