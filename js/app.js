@@ -93,6 +93,7 @@ async function loadRssFeed(forceRefresh) {
 function normalizeRssArticle(item) {
   return {
     ...item,
+    image: decodeXmlEntities(item.image || ''),
     category: item.category || 'Tin tức',
     publishedAt: item.publishedAt ? new Date(item.publishedAt).toLocaleString('vi-VN') : 'Mới cập nhật',
     readTime: '3 phút đọc',
@@ -180,13 +181,17 @@ function fallbackImage(article) {
 function imageUrl(url) {
   if (!url) return '';
   try {
-    const parsed = new URL(url, window.location.href);
+    const parsed = new URL(decodeXmlEntities(url), window.location.href);
     return parsed.hostname.endsWith('vnecdn.net')
       ? `/api/image?url=${encodeURIComponent(parsed.href)}`
       : parsed.href;
   } catch {
     return '';
   }
+}
+
+function decodeXmlEntities(value) {
+  return String(value).replace(/&amp;/g, '&');
 }
 
 function escapeHtml(value = '') {
