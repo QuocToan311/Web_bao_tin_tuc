@@ -2180,3 +2180,45 @@ img {
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
 }
+
+
+/* ==========================================================================
+   VNEWS 24H - ARTICLE AI / TRANSLATION / SHARE TOOLS (ADD-ON)
+   ========================================================================== */
+.article-ai-tools{display:grid;gap:14px;margin:22px 0 28px}
+.article-tool-block{padding:16px;border:1px solid var(--border-subtle);border-radius:14px;background:var(--bg-surface)}
+.article-tool-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px;color:var(--text-primary);font-weight:800}
+.article-tool-heading>span:first-child{display:inline-flex;align-items:center;gap:9px}
+.article-tool-heading i{color:var(--accent-crimson)}
+.article-tool-note{color:var(--text-muted);font-size:.72rem;font-weight:600}
+.article-tool-actions{display:flex;flex-wrap:wrap;gap:9px}
+.article-tool-actions select{min-width:160px;padding:10px 12px;border:1px solid var(--border-strong);border-radius:9px;color:var(--text-primary);background:var(--bg-surface);font:inherit}
+.article-tool-button{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:10px 14px;border:0;border-radius:9px;background:var(--accent-crimson);color:#fff;font:700 .84rem var(--font-sans);cursor:pointer;transition:transform .18s ease,opacity .18s ease}
+.article-tool-button:hover{transform:translateY(-1px);opacity:.92}
+.article-tool-button:disabled{opacity:.55;cursor:wait;transform:none}
+.article-tool-status{margin-top:10px;color:var(--text-muted);font-size:.82rem}
+.article-translation-result{margin-top:14px;padding:16px;border-radius:10px;background:var(--bg-subtle);color:var(--text-primary);line-height:1.75;white-space:pre-line}
+.article-translation-result h3{margin:0 0 10px;font-size:1.2rem;line-height:1.45}
+.article-translation-result p{margin:0 0 12px}
+#article-translation-body{white-space:pre-line}
+.article-sentiment-result{margin-top:14px;padding:14px;border-radius:10px;background:var(--bg-subtle)}
+.sentiment-main{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px;margin-bottom:14px}
+.sentiment-main strong{color:var(--accent-crimson);font-size:1.05rem}
+.sentiment-main span{color:var(--text-muted);font-size:.8rem}
+.sentiment-bars{display:grid;gap:10px}
+.sentiment-row{display:grid;grid-template-columns:76px minmax(70px,1fr) 42px;align-items:center;gap:10px;font-size:.8rem}
+.sentiment-track{height:9px;overflow:hidden;border-radius:99px;background:var(--bg-elevated)}
+.sentiment-track span{display:block;width:0;height:100%;border-radius:inherit;transition:width .35s ease}
+#sentiment-positive-bar{background:#10b981}#sentiment-neutral-bar{background:#94a3b8}#sentiment-negative-bar{background:#ef4444}
+.sentiment-row b{text-align:right;color:var(--text-secondary)}
+.sentiment-keywords{margin:13px 0 0;color:var(--text-secondary);font-size:.8rem}
+.article-tool-disclaimer{margin:9px 0 0;color:var(--text-muted);font-size:.72rem;line-height:1.5}
+.article-qr-block{margin-top:0}
+.article-qr-close{width:30px;height:30px;border:0;border-radius:50%;background:var(--bg-elevated);color:var(--text-primary);font-size:1.25rem;cursor:pointer}
+.article-qr-content{display:flex;align-items:center;gap:18px}
+.article-qr-content img{width:148px;height:148px;padding:8px;border:1px solid var(--border-subtle);border-radius:10px;background:#fff;object-fit:contain}
+.article-qr-content p{margin:6px 0 12px;color:var(--text-muted);font-size:.82rem}
+.article-share-links{display:flex;gap:14px;margin-top:10px;font-size:.82rem;font-weight:700}
+.article-share-links a{color:var(--accent-blue);text-decoration:none}.article-share-links a:hover{text-decoration:underline}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+@media(max-width:600px){.article-tool-block{padding:12px}.article-tool-heading{align-items:flex-start}.article-tool-note{text-align:right}.article-tool-actions{flex-direction:column}.article-tool-actions select,.article-tool-actions .article-tool-button{width:100%}.article-qr-content{align-items:flex-start;flex-direction:column}.article-qr-content img{width:132px;height:132px}}
