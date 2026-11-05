@@ -63,6 +63,18 @@
       </div>
 
       <div class="top-bar-right">
+        <label class="rss-source-control" for="rss-source-select">
+          <span>Nguồn:</span>
+          <select id="rss-source-select" aria-label="Chọn nguồn tin RSS">
+            <option value="vnexpress">VnExpress</option>
+            <option value="tuoitre">Tuổi Trẻ</option>
+            <option value="thanhnien">Thanh Niên</option>
+            <option value="dantri">Dân Trí</option>
+          </select>
+          <button id="rss-refresh-btn" class="rss-refresh-btn" type="button" title="Làm mới RSS">
+            <i class="fa-solid fa-rotate"></i>
+          </button>
+        </label>
         <!-- Bookmark Trigger -->
         <button class="bookmark-toggle-btn" id="bookmark-toggle-btn" title="Xem danh sách bài đã lưu">
           <i class="fa-solid fa-bookmark" style="color: var(--accent-crimson);"></i>
@@ -334,13 +346,14 @@
             </div>
           </div>
 
-          <div class="news-cards-grid">
+          <div class="news-cards-grid" id="rss-news-grid">
             <!-- News Card 1 -->
             <article class="news-card" onclick="openReaderModalById('biz-01')">
               <div class="card-media">
                 <span class="category-tag blue">Tài Chính Số</span>
                 <img src="assets/images/business.jpg" alt="Giao dịch không tiền mặt" loading="lazy">
               </div>
+              <button class="load-more-btn" id="rss-load-more-btn" type="button">Xem thêm tin tức</button>
               <div class="card-body">
                 <h3 class="card-title">Chuyển Đổi Số Trong Ngành Ngân Hàng: Khi Thanh Toán Không Chạm Trở Thành Lựa Chọn Thống Trị</h3>
                 <p class="card-sapo">Tỷ lệ giao dịch trực tuyến qua mã QR và ví điện tử đạt mức kỷ lục 82%, định hình lại hành vi chi tiêu.</p>

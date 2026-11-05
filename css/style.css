@@ -5,6 +5,14 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300&display=swap');
 
+.rss-source-control { display: inline-flex; align-items: center; gap: .35rem; font-size: .75rem; color: var(--text-muted); }
+.rss-source-control select, .rss-refresh-btn { border: 1px solid var(--border-subtle); border-radius: 6px; background: var(--bg-surface); color: var(--text-primary); padding: .35rem .45rem; font: inherit; }
+.rss-refresh-btn { cursor: pointer; }
+.rss-refresh-btn.is-loading i { animation: spin .8s linear infinite; }
+.load-more-btn { display: block; margin: 1.25rem auto 0; border: 0; border-radius: 8px; padding: .75rem 1.25rem; background: var(--accent-crimson); color: #fff; font: 700 .85rem var(--font-sans); cursor: pointer; }
+.load-more-btn:disabled { opacity: .55; cursor: not-allowed; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
 :root {
   /* Typography */
   --font-serif: 'Playfair Display', Georgia, serif;

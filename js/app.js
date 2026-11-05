@@ -3,6 +3,7 @@
    ========================================================================== */
 
 document.addEventListener('DOMContentLoaded', () => {
+  initRssIntegration();
   initClockAndDate();
   initTicker();
   initThemeToggle();
@@ -14,6 +15,187 @@ document.addEventListener('DOMContentLoaded', () => {
   initSearch();
   initCategoryNavigation();
 });
+
+let rssArticles = [];
+let rssVisibleCount = 6;
+let rssSource = 'vnexpress';
+let rssCategory = 'home';
+let rssRequestController = null;
+
+const rssCategoryMap = {
+  'Thời sự': 'thoisu',
+  'Kinh doanh': 'kinhdoanh',
+  'Công nghệ AI': 'congnghe',
+  'Thể thao': 'thethao',
+  'Văn hóa & Đời sống': 'doisong'
+};
+
+function initRssIntegration() {
+  const sourceSelect = document.getElementById('rss-source-select');
+  const refreshBtn = document.getElementById('rss-refresh-btn');
+  const loadMoreBtn = document.getElementById('rss-load-more-btn');
+
+  if (sourceSelect) {
+    sourceSelect.addEventListener('change', () => {
+      rssSource = sourceSelect.value;
+      loadRssFeed(true);
+    });
+  }
+  if (refreshBtn) refreshBtn.addEventListener('click', () => loadRssFeed(true));
+  if (loadMoreBtn) loadMoreBtn.addEventListener('click', () => {
+    rssVisibleCount += 6;
+    renderRssNews();
+  });
+
+  loadRssFeed(false);
+  setInterval(() => loadRssFeed(false), 5 * 60 * 1000);
+}
+
+async function loadRssFeed(forceRefresh) {
+  const refreshBtn = document.getElementById('rss-refresh-btn');
+  if (rssRequestController) rssRequestController.abort();
+  rssRequestController = new AbortController();
+  if (refreshBtn) {
+    refreshBtn.disabled = true;
+    refreshBtn.classList.add('is-loading');
+  }
+
+  try {
+    const query = new URLSearchParams({
+      source: rssSource,
+      category: rssCategory,
+      ...(forceRefresh ? { refresh: '1' } : {})
+    });
+    const response = await fetch(`/api/rss?${query}`, { signal: rssRequestController.signal });
+    const result = await response.json();
+    if (!response.ok || !result.ok) throw new Error(result.error || 'Không thể tải RSS');
+    rssArticles = result.items.map(normalizeRssArticle);
+    rssVisibleCount = 6;
+    NEWS_DATA.breakingNews = rssArticles.slice(0, 8).map(item => item.title);
+    renderRssNews();
+    showToast(`Đã cập nhật ${rssArticles.length} tin từ ${result.source}`);
+  } catch (error) {
+    if (error.name !== 'AbortError') {
+      rssArticles = getFallbackArticles();
+      rssVisibleCount = 6;
+      renderRssNews();
+      showToast(`RSS tạm thời không khả dụng, đang dùng dữ liệu mẫu`);
+      console.error('RSS loading failed:', error);
+    }
+  } finally {
+    if (refreshBtn) {
+      refreshBtn.disabled = false;
+      refreshBtn.classList.remove('is-loading');
+    }
+  }
+}
+
+function normalizeRssArticle(item) {
+  return {
+    ...item,
+    category: item.category || 'Tin tức',
+    publishedAt: item.publishedAt ? new Date(item.publishedAt).toLocaleString('vi-VN') : 'Mới cập nhật',
+    readTime: '3 phút đọc',
+    author: { name: item.source || 'Nguồn RSS' }
+  };
+}
+
+function getFallbackArticles() {
+  return [NEWS_DATA.mainHero, ...NEWS_DATA.subHeroes, ...NEWS_DATA.businessNews].map(item => ({
+    ...item,
+    link: item.link || '',
+    source: 'Dữ liệu mẫu'
+  }));
+}
+
+function renderRssNews() {
+  const visible = rssArticles.slice(0, rssVisibleCount);
+  if (!visible.length) return;
+
+  const hero = visible[0];
+  const subHeroes = visible.slice(1, 3);
+  const feed = visible.slice(3, 9);
+  const heroImg = document.querySelector('.main-hero-media img');
+  const heroTitle = document.querySelector('.main-hero-title');
+  const heroSapo = document.querySelector('.main-hero-sapo');
+  if (heroImg && hero.image) heroImg.src = imageUrl(hero.image);
+  if (heroTitle) {
+    heroTitle.textContent = hero.title;
+    heroTitle.onclick = () => openReaderModal(hero);
+  }
+  if (heroSapo) heroSapo.textContent = hero.sapo || '';
+  const heroMedia = document.querySelector('.main-hero-media');
+  if (heroMedia) heroMedia.onclick = () => openReaderModal(hero);
+  const subContainer = document.querySelector('.sub-hero-col');
+  if (subContainer) {
+    subContainer.innerHTML = subHeroes.map(article => `
+      <article class="sub-hero-card" data-rss-id="${escapeAttribute(article.id)}">
+        <div class="card-media">
+          <span class="category-tag blue">${escapeHtml(article.category)}</span>
+          <img src="${escapeAttribute(imageUrl(article.image || fallbackImage(article)))}" alt="${escapeAttribute(article.title)}" loading="lazy">
+        </div>
+        <div class="card-body">
+          <h3 class="card-title">${escapeHtml(article.title)}</h3>
+          <div class="card-meta"><span class="time-read"><i class="fa-regular fa-clock"></i> ${escapeHtml(article.publishedAt)}</span><span>${escapeHtml(article.source || '')}</span></div>
+        </div>
+      </article>
+    `).join('');
+    subContainer.querySelectorAll('[data-rss-id]').forEach(card => card.addEventListener('click', () => openReaderModal(findRssArticle(card.dataset.rssId))));
+  }
+  const feedContainer = document.getElementById('feed-list-container');
+  if (feedContainer) {
+    feedContainer.innerHTML = feed.map(article => `
+      <div class="feed-item" data-rss-id="${escapeAttribute(article.id)}">
+        <span class="feed-item-time">${escapeHtml(article.publishedAt)}</span>
+        <p class="feed-item-title">${escapeHtml(article.title)}</p>
+      </div>
+    `).join('');
+    feedContainer.querySelectorAll('[data-rss-id]').forEach(item => item.addEventListener('click', () => openReaderModal(findRssArticle(item.dataset.rssId))));
+  }
+  const grid = document.getElementById('rss-news-grid');
+  if (grid) {
+    grid.innerHTML = visible.map(article => `
+      <article class="news-card" data-rss-id="${escapeAttribute(article.id)}">
+        <div class="card-media"><span class="category-tag blue">${escapeHtml(article.category)}</span><img src="${escapeAttribute(imageUrl(article.image || fallbackImage(article)))}" alt="${escapeAttribute(article.title)}" loading="lazy"></div>
+        <div class="card-body"><h3 class="card-title">${escapeHtml(article.title)}</h3><p class="card-sapo">${escapeHtml(article.sapo || '')}</p><div class="card-meta"><span>${escapeHtml(article.publishedAt)}</span><span>${escapeHtml(article.source || '')}</span></div></div>
+      </article>
+    `).join('');
+    grid.querySelectorAll('[data-rss-id]').forEach(card => card.addEventListener('click', () => openReaderModal(findRssArticle(card.dataset.rssId))));
+  }
+  const loadMoreBtn = document.getElementById('rss-load-more-btn');
+  if (loadMoreBtn) {
+    loadMoreBtn.hidden = rssVisibleCount >= rssArticles.length;
+    loadMoreBtn.textContent = `Xem thêm tin tức (${Math.max(rssArticles.length - rssVisibleCount, 0)})`;
+  }
+}
+
+function findRssArticle(id) {
+  return rssArticles.find(article => article.id === id) || getFallbackArticles().find(article => article.id === id) || rssArticles[0];
+}
+
+function fallbackImage(article) {
+  return `https://source.unsplash.com/800x500/?news,${encodeURIComponent(article.category || 'news')}`;
+}
+
+function imageUrl(url) {
+  if (!url) return '';
+  try {
+    const parsed = new URL(url, window.location.href);
+    return parsed.hostname.endsWith('vnecdn.net')
+      ? `/api/image?url=${encodeURIComponent(parsed.href)}`
+      : parsed.href;
+  } catch {
+    return '';
+  }
+}
+
+function escapeHtml(value = '') {
+  return String(value).replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
+}
+
+function escapeAttribute(value = '') {
+  return escapeHtml(value);
+}
 
 /* ==========================================================================
    1. Live Clock & Calendar (Thời Gian & Lịch Thực Tế)
@@ -370,7 +552,7 @@ function openReaderModal(article) {
 
   const modalImg = document.getElementById('modal-image');
   if (modalImg && article.image) {
-    modalImg.src = article.image;
+    modalImg.src = imageUrl(article.image);
     modalImg.style.display = 'block';
   } else if (modalImg) {
     modalImg.style.display = 'none';
@@ -414,11 +596,42 @@ function openReaderModal(article) {
 
   modal.classList.add('active');
   document.body.style.overflow = 'hidden';
+
+  if (article.link && !article.content) {
+    const modalBody = document.getElementById('modal-body-content');
+    if (modalBody) modalBody.innerHTML = '<p>Đang tải toàn văn bài viết...</p>';
+    loadFullArticle(article);
+  }
+}
+
+async function loadFullArticle(article) {
+  try {
+    const response = await fetch(`/api/article?url=${encodeURIComponent(article.link)}`);
+    const result = await response.json();
+    if (!response.ok || !result.ok) throw new Error(result.error || 'Không thể lấy toàn văn');
+    Object.assign(article, result.article);
+    if (currentArticleData !== article) return;
+    const modalTitle = document.getElementById('modal-title');
+    const modalSapo = document.getElementById('modal-sapo');
+    const modalBody = document.getElementById('modal-body-content');
+    const modalImg = document.getElementById('modal-image');
+    if (modalTitle) modalTitle.textContent = article.title;
+    if (modalSapo) modalSapo.textContent = article.sapo || '';
+    if (modalBody) modalBody.innerHTML = article.content || '<p>Bài viết chưa có nội dung toàn văn.</p>';
+    if (modalImg && article.image) {
+      modalImg.src = imageUrl(article.image);
+      modalImg.style.display = 'block';
+    }
+    showToast('Đã tải toàn văn bài viết');
+  } catch (error) {
+    console.error('Article crawling failed:', error);
+    showToast('Không thể tải toàn văn, đang hiển thị phần tóm tắt');
+  }
 }
 
 function openReaderModalById(id) {
   // Find in mock database
-  let article = null;
+  let article = rssArticles.find(item => item.id === id) || null;
   if (NEWS_DATA.mainHero.id === id) article = NEWS_DATA.mainHero;
   else if (NEWS_DATA.eMagazine.id === id) article = NEWS_DATA.eMagazine;
   else article = NEWS_DATA.subHeroes.find(a => a.id === id) || 
@@ -559,6 +772,13 @@ function initCategoryNavigation() {
     item.addEventListener('click', (e) => {
       navItems.forEach(n => n.classList.remove('active'));
       item.classList.add('active');
+      const label = item.textContent.trim();
+      const category = rssCategoryMap[label];
+      if (category) {
+        e.preventDefault();
+        rssCategory = category;
+        loadRssFeed(false);
+      }
     });
   });
 }
