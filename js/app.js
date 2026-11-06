@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initArticleReader();
   initSearch();
   initCategoryNavigation();
+  initWeather();
 });
 
 let rssArticles = [];
@@ -813,3 +814,74 @@ function showToast(message) {
     setTimeout(() => toast.remove(), 300);
   }, 3200);
 }
+
+/* ==========================================================================
+   12. Hàm gọi thời tiết
+   ========================================================================== */
+//vị trí mặc định
+const DEFAULT_LOCATION = { lat: 10.8231, lon: 106.6297, city: 'TP.HCM'} 
+
+function initWeather() {
+  if (!navigator.geolocation) {
+    //nếu trình duyệt không hỗ trợ định vị => gọi tới vị trí mặc định
+    loadWeather(DEFAULT_LOCATION.lat, DEFAULT_LOCATION.lon, DEFAULT_LOCATION.city);
+    return;
+  }
+
+  navigator.geolocation.getCurrentPosition(
+    (pos) => {
+      //lấy pos.coords.latitude và pos.coords.longitude rồi gọi loadWeather
+      loadWeather(pos.coords.latitude, pos.coords.longitude, 'Vị trí của bạn');
+    },
+    () => {
+      //người dùng từ chối => gọi vị trí mặc định
+      loadWeather(DEFAULT_LOCATION.lat, DEFAULT_LOCATION.lon, DEFAULT_LOCATION.city);
+    },
+    { timeout: 8000 }
+  );
+}
+
+async function loadWeather(lat, lon, city) {
+  //ghép URL có lat, lon
+  const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}` +
+              `&current=temperature_2m,weather_code&timezone=auto`;
+
+  try {
+    //gọi API
+    const response = await fetch(url);
+    if (!response.ok) throw new Error('HTTP' + response.status);
+    const data = await response.json();
+
+    //lấy dữ liệu thời tiết
+    const temp = data.current.temperature_2m;
+    const code = data.current.weather_code;
+
+    console.log('Thời tiết: ', city, temp, code);
+    renderWeather(city, temp, code);
+    
+  } catch (error) {
+    //báo lỗi
+    console.error('Weather failed: ', error);
+    document.getElementById('weather-desc').textContent = 'Không tải được';
+  }
+}
+
+function getWeatherIcon(code) {
+  if (code === 0) return { text: 'Trời quang', icon: 'fa-sun'};
+  if (code <= 3) return { text: 'Có mây', icon: 'fa-cloud-sun'};
+  if (code === 45 || code === 48) return { text: 'Sương mù', icon: 'fa-smog'};
+  if (code >= 51 && code <= 57 ) return { text: 'Mưa phùn', icon: 'fa-cloud-rain'};
+  if ( (code >= 61 && code <= 67) || (code >= 80 && code <= 82)) return { text: 'Mưa', icon: 'fa-cloud-showers-heavy'};
+  if ( code >= 95 && code <= 99 ) return { text: 'Mưa dông', icon: 'fa-cloud-bolt'};
+
+  return { text: 'Không rõ', icon: 'fa-cloud' };
+}
+
+function renderWeather(city, temp, code) {
+  const info = getWeatherIcon(code);
+
+  document.getElementById('weather-city').textContent = city;
+  document.getElementById('weather-temp').textContent = Math.round(temp) + '°C';
+  document.getElementById('weather-desc').textContent = info.text;
+  document.getElementById('weather-icon').className = 'fa-solid ' + info.icon
+} 
