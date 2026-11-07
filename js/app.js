@@ -456,6 +456,8 @@ function initAudioPlayer() {
 
   function stopAudio() {
     isPlaying = false;
+    seconds = 0;
+    if (timeDisplay) timeDisplay.textContent = '00:00 / 01:00'; 
     container.classList.remove('audio-playing');
     playBtn.innerHTML = '<i class="fa-solid fa-play"></i>';
     clearInterval(timerInterval);
@@ -856,7 +858,7 @@ async function loadWeather(lat, lon, city) {
     const temp = data.current.temperature_2m;
     const code = data.current.weather_code;
 
-    console.log('Thời tiết: ', city, temp, code);
+    console.log('Thời tiết: ', city, temp, code); //kiểm tra trong log xem lấy được local và temp chưa
     renderWeather(city, temp, code);
     
   } catch (error) {
