@@ -638,12 +638,18 @@ async function loadFullArticle(article) {
 }
 
 function openReaderModalById(id) {
-  // Find in mock database
-  let article = rssArticles.find(item => item.id === id) || null;
-  if (NEWS_DATA.mainHero.id === id) article = NEWS_DATA.mainHero;
-  else if (NEWS_DATA.eMagazine.id === id) article = NEWS_DATA.eMagazine;
-  else article = NEWS_DATA.subHeroes.find(a => a.id === id) || 
-                 NEWS_DATA.businessNews.find(a => a.id === id);
+    // Tìm theo thứ tự ưu tiên: RSS đang hiển thị → bài đã lưu → dữ liệu mẫu
+    const mockArticles = [
+      NEWS_DATA.mainHero,
+      NEWS_DATA.eMagazine,
+      ...NEWS_DATA.subHeroes,
+      ...NEWS_DATA.businessNews
+    ];
+
+    let article =
+      rssArticles.find(item => item.id === id) ||
+      bookmarks.find(item => item.id === id) ||
+      mockArticles.find(item => item.id === id);
 
   if (!article) {
     article = {
